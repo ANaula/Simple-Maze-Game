@@ -9,4 +9,6 @@ The game uses the SFML library (which could be downloaded here- https://www.sfml
 
 ![Alt Text](https://media.giphy.com/media/h6084L81fSgFQq1nxC/giphy.gif)
 
-##Download
+## Download
+
+To download the game, go to the releases and download either the msi or exe file.

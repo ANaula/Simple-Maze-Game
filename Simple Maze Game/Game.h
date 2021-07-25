@@ -24,11 +24,13 @@ public:
 	virtual ~Game();
 
 	//Functions
-
-
 	void updateSFMLEvents();
+
+	//update and render
 	void update();
 	void render();
+
+	//Function that runs the entire game
 	void run();
 };
 

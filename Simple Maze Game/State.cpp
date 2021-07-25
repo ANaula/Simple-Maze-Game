@@ -19,6 +19,7 @@ bool State::getCloseApp()
 
 void State::updateMousePositions()
 {
+	//gets mouse position relative to computer screen, window, and game
 	this->mousePosScreen = sf::Mouse::getPosition();
 	this->mousePosWindow = sf::Mouse::getPosition(*this->window);
 	this->mousePosView = this->window->mapPixelToCoords(sf::Mouse::getPosition(*this->window));

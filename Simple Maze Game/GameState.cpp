@@ -11,6 +11,7 @@ GameState::GameState(sf::RenderWindow* window, std::stack<State*>* states) :Stat
 
 GameState::~GameState()
 {
+	//Deletes all the buttons created and stored dynamically by the stages
 	for (auto& it : stageStates) {
 		auto i = it.buttons.begin();
 		for (i = it.buttons.begin(); i != it.buttons.end(); ++i) {
@@ -23,6 +24,7 @@ GameState::~GameState()
 
 void GameState::initStages()
 {
+	//Creates the stages and adds them to the stageState vector
 	this->stageStates.push_back(Stages(0, this->window, &this->font));
 	this->stageStates.push_back(Stages(1,this->window,&this->font));
 	this->stageStates.push_back(Stages(2, this->window, &this->font));
@@ -30,6 +32,7 @@ void GameState::initStages()
 }
 
 void GameState::initVariables() {
+	//Sets the player shape and level
 	this->shape = player.getShape();
 	this->level = 0;
 	
@@ -41,12 +44,15 @@ void GameState::initObstacles() {
 
 void GameState::checkForPause()
 {
+	//Checks if esc is pressed to bring up the pause menu
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 		this->states->push(new PauseState(window, states));
 	}
 }
 
 void GameState::initFonts() {
+
+	//loads font
 	if (!this->font.loadFromFile("Fonts/Roboto-Black.ttf")) {
 		throw("ERROR::MAINMENUSTATE::COULD NOT LOAD FONT");
 	}
@@ -56,6 +62,7 @@ void GameState::initFonts() {
 void GameState::updatePlayerMovement()
 {
 	
+	// Checks if w-a-s-d keys are pressed to move player shape
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && (this->shape->getPosition().x>0)) {
 			this->player.move(-1.0f, 0.0f);
 		}
@@ -76,6 +83,7 @@ void GameState::updatePlayerMovement()
 
 void GameState::setObstacles()
 {
+	//sets obstacles depending on what stage the player is on
 	this->player.rePosition(0, 0);
 	this->movingShapes = stageStates[level].getMovingShapes();
 	this->nonMovingShapes = stageStates[level].getNonMovingShapes();
@@ -87,6 +95,8 @@ void GameState::setObstacles()
 
 void GameState::checkCollision()
 {
+	//checks for collision between player and obstacles (both stationary and moving)
+
 	for (auto& it : *nonMovingShapes) {
 		if (player.getShape()->getGlobalBounds().intersects(it.getGlobalBounds())) {
 			this->player.rePosition(0.0f, 0.0f);
@@ -122,6 +132,10 @@ void GameState::update()
 
 void GameState::render(sf::RenderTarget* target)
 {
+	//Renders the stage, but checks to see if it should render the player. Each stage has three components. The intro screen, game screen which is the stage is played, and outro screen. The intro and outro screens do not display the obstacles nor the player and instead display just a button to continue on to the game portion of the stage. 
+	//Only renders the player if the stage is past the intro screen and is on the game part of the stage.
+
+
 	if (!target) {
 		target = this->window;
 	}
@@ -138,6 +152,7 @@ void GameState::render(sf::RenderTarget* target)
 
 bool GameState::checkStagePart()
 {
+	//checks to see if the stage is on the game part of the stage.
 	if (stageStates[level].getPart() == GAME) {
 		return true;
 	}
@@ -146,6 +161,7 @@ bool GameState::checkStagePart()
 
 void GameState::nextStage()
 {
+	//Moves to the next stage if there is a next stage. If there is not the game state ends.
 	if (level + 1 != stageStates.size()) {
 		this->level++;
 		this->setObstacles();

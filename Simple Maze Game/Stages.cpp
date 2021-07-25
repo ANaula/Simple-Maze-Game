@@ -2,6 +2,7 @@
 
 void Stages::initVariables(int num)
 {
+	//converts num given to us in stage constructor to specific stageLevel
 	switch (num) {
 		case 0:
 			stageLevel = FIRST;
@@ -23,13 +24,11 @@ void Stages::initVariables(int num)
 	this->levelCompleted = false;
 }
 
-void Stages::initFont()
-{
-	
-}
+
 
 void Stages::initButtons()
 {
+	//creates buttons and adds them to button MAP container. End button text will depend on what stage we are in
 	std::string buttonText;
 
 	if (stageLevel == 2) {
@@ -46,6 +45,7 @@ void Stages::initButtons()
 
 void Stages::initwinZone(stage_num stageLevel)
 {
+	//creates the winzone depending on what stage we are in
 	switch (stageLevel) {
 	case FIRST:
 		this->winZone.setSize(sf::Vector2f(80.0f, 120.0f));
@@ -72,6 +72,8 @@ void Stages::initwinZone(stage_num stageLevel)
 
 void Stages::setObstacles(stage_num stageLevel)
 {
+	//sets obstacles depending on what stage we are in
+
 	switch (stageLevel) {
 	case FIRST:
 		shapes.push_back(sf::RectangleShape(sf::Vector2f(850, 170)));
@@ -164,13 +166,14 @@ void Stages::setObstacles(stage_num stageLevel)
 
 void Stages::initStageScreen()
 {
+	//creates stage screen and sets size/position
 	this->stageScreen.setSize(sf::Vector2f(380.0f, 340.0f));
 	this->stageScreen.setPosition(sf::Vector2f(this->window->getSize().x/2-stageScreen.getSize().x/2, 110.0f));
 }
 
 void Stages::setStageScreen()
 {
-
+	//makes stage screen take a texture depending on what stage and what part of the stage we are on
 	switch (stageLevel) {
 	case 0:
 		if (part == INTRO) {
@@ -207,7 +210,6 @@ Stages::Stages(int num,sf::RenderWindow* window, sf::Font* font)
 	initStageScreen();
 	setStageScreen();
 	initButtons();
-	initFont();
 	initwinZone(stageLevel);
 	setObstacles(stageLevel);
 }
@@ -245,11 +247,13 @@ stage_part Stages::getPart()
 
 void Stages::stageCompleted()
 {
+	//once the player shape touches the winzone, the gamestate will call on this function to make the part of the stage equal end. This will cause the end screen to appear.
 	this->part = END;
 }
 
 void Stages::updateButtons(const sf::Vector2f mousePos)
 {
+	//Update part specific buttons and check to see if certain buttons are pressed.
 	this->buttons[part]->update(mousePos);
 
 
@@ -276,6 +280,7 @@ void Stages::updateButtons(const sf::Vector2f mousePos)
 
 void Stages::renderButtons(sf::RenderTarget* target)
 {
+	//render part specific button
 	this->buttons[part]->render(target);
 }
 
@@ -288,6 +293,7 @@ void Stages::renderStageScreen(sf::RenderTarget* target)
 
 void Stages::renderObstacles(sf::RenderTarget* target)
 {
+	//render all obstacles in obstacle container
 	for (auto& it : shapes) {
 		target->draw(it);
 	}
@@ -296,6 +302,8 @@ void Stages::renderObstacles(sf::RenderTarget* target)
 
 void Stages::renderMovingObstacles(sf::RenderTarget* target)
 {
+	//render all moving obstacles in moving obstacle container
+
 	for (auto& it : movingShapes) {
 		it.render(target);
 	}
@@ -303,6 +311,7 @@ void Stages::renderMovingObstacles(sf::RenderTarget* target)
 
 void Stages::updateMovingObstacle(stage_num stageLevel)
 {
+	//updates moving obstacles, making them move and invert their movement if coming to contact with a stationary object. Checks their vMove variable to see if they move vertically or side to side.
 	for (auto& it : movingShapes) {
 		if (it.vMove == true) {
 			it.move(0, 1);
@@ -322,6 +331,7 @@ void Stages::updateMovingObstacle(stage_num stageLevel)
 
 void Stages::update(const sf::Vector2f mousePos)
 {
+	//updates either the moving obstacles if in game part or the screen and buttons if not in game part
 	if (part == GAME) {
 		this->updateMovingObstacle(stageLevel);
 
@@ -337,6 +347,7 @@ void Stages::update(const sf::Vector2f mousePos)
 
 void Stages::render(sf::RenderTarget* target)
 {
+	//renders obstacles and winzone if in game part or screen and buttons if not in game part
 	if (part == GAME) {
 		renderObstacles(target);
 		renderMovingObstacles(target);

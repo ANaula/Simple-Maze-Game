@@ -31,6 +31,7 @@ void Player::update()
 
 void Player::render(sf::RenderTarget* target)
 {
+	//renders player
 		target->draw(this->shape);
 
 	

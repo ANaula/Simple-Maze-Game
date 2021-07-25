@@ -1,5 +1,6 @@
 #include "Game.h"
 
+//Game Loop
 int main()
 {
     Game game;
